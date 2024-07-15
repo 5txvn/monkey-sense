@@ -1,20 +1,88 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Monkey Sense</title>
+    <title>Monkey Sense (Steven's Version)</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script src="generator.js"></script>
     <script src="main.js"></script>
+    <!-- import bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- import mathjax -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- import fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- page icon -->
+    <link rel="icon" type="image/x-icon" href="./monkeysense-logo.ico">
   </head>
   <body>
-    <h1>Monkey Sense</h1>
-    <div id="question">Click start</div>
-    <div class="flex-center">
-      <input name="inputbox" id="inputbox" type="text" oninput="onInputChange(this)" onkeydown="onEnterPressed(event, this);"><br/>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-sm bg-light justify-content-center">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link">Home <i class="fa fa-home"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">About <i class="fa fa-info"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">Github Repo <i class="fa fa-github"></i></a>
+        </li>
+      </ul>
+    </nav>
+    <div class="sub-nav">
+      <div class="stats fs-3 dropdown ms-3">
+        <button type="button" class="btn dropdown-toggle fw-bold" data-bs-toggle="dropdown">CURRENT STATS <img src="./icons/chart.png"></button>
+        <ul class="dropdown-menu">
+          <li>Last Time: <span id="answertime">Haven't started yet</span></li>
+          <li>Question Count: <span id="questioncount">Haven't started yet</span></li>
+          <li>Average Time: <span id="averagetime">Haven't started yet</span></li>
+          <li>Score: <span id=score>Haven't started yet</span></li>
+          <li>Total Time: <span id=totaltime>Haven't started yet</span></li>
+        </ul>
+        </button>
+      </div>
+      <p class="fw-bold fs-3 score mx-3"><span style="color: orange" id="streak">0</span><img src="./icons/fire.png"><span style="color: mediumseagreen;" class="ms-3" id="correct">0</span><img src="./icons/check.png"><span style="color: red;" class="ms-3" id="wrong">0</span><img src="./icons/cross.png"></p>
     </div>
+    <br>
+    <!-- title -->
+    <h1 class="text-center" style="font-size:64px;"><span class="sb">M</span><span class="gr">o</span><span class="sb">n</span><span class="gr">k</span><span class="sb">e</span><span class="gr">y</span> <span class="sb">S</span><span class="gr">e</span><span class="sb">n</span><span class="gr">s</span><span class="sb">e</span></h1>
+    <div id="question" class="fw-bold fs-3 mt-5 text-center">Waiting to start... <img src="./icons/start.png"></div>
+    <div class="justify-content-center align-items-center">
+      <div class="text-center mt-5">
+        <input class="form-control w-50 text-center my-auto no-focus-border" autofocus name="inputbox" id="inputbox" type="text" oninput="onInputChange(this)" onkeydown="onEnterPressed(event, this);"><br>
+        <button class="w-25 btn btn-success mt-3" id="start" onclick="doStart();">Start</button>
+        <button class="w-25 btn btn-danger mt-3" id="stop" onclick="doStop();">Stop</button>
+        <br>
+      </div>
+    </div>
+    <hr class="mt-4">
+      <h3 class="text-center mt-3">Test Mode</h3>
+      <select class="form-select w-25 mt-3" id="testlength" name="testlength">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="40">40</option>
+        <option value="80" selected>80</option>
+        <option value="120">120</option>
+        <option value="160">160</option>
+      </select>
+      <h3 class="text-center mt-3">Mode</h3>
+      <select class="form-select w-25 mt-3" name="mode" id="mode">
+        <option value="ns">Number Sense</option>
+        <option value="zetamac">Zetamac</option>
+        <option value="estimate">Estimate</option>
+      </select>
+    <!--
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" name="requireenter" id="requireenter" checked>
+      <label class="form-check-label" for="requireenter">Require Enter</label>
+    </div>
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something" checked>
+      <label class="form-check-label" for="check1">Option 1</label>
+    </div>
+  -->
     <br/>
     <div style="margin-bottom: 8px;">
       <input type="checkbox" name="requireenter" id="requireenter" checked tabindex="-1">
@@ -24,55 +92,11 @@
       <label for="hardcore">Hardcore</label>
       <br/>
       <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; column-gap: 4px;">
-        <input type="checkbox" name="testmode" id="testmode" tabindex="-1">
-        <label for="testmode">Test Mode</label>
-        <span></span>
-        <select name="testlength" id="testlength" tabindex="-1">
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="40">40</option>
-          <option value="80" selected>80</option>
-          <option value="120">120</option>
-          <option value="160">160</option>
-        </select>
+        <input class="d-none" type="checkbox" name="testmode" id="testmode" tabindex="-1">
       </div>
-      <label for="mode">Mode&nbsp;</label>
-      <select name="mode" id="mode" tabindex="-1">
-        <option value="ns">Number Sense</option>
-        <option value="zetamac">Zetamac</option>
-        <option value="estimate">Estimate</option>
-      </select>
-    </div>
-    <div class="flex-center">
-      <button id="start" onclick="doStart();">Start</button>
-      <div></div>
-      <button id="stop" onclick="doStop();">Stop</button>
     </div>
     <br/>
-    <div>
-      <div class="flex-center">
-        <div>Last Time:</div>
-        <div id="answertime"></div>
-      </div>
-      <div id="lastanswer"></div>
-      <div id="data">
-        <div class="flex-center">
-          <div>Question Count:</div>
-          <div id="questioncount"></div>
-        </div>
-        <div class="flex-center">
-          <div>Average Time:</div>
-          <div id="averagetime"></div>
-        </div>
-        <div class="flex-center">
-          <div>Score:</div>
-          <div id="score"></div>
-        </div>
-        <div class="flex-center">
-          <div>Total Time:</div>
-          <div id="totaltime">0.0s</div>
-        </div>
-      </div>
-    </div>
   </body>
+  <!-- import custom css script -->
+  <link rel="stylesheet" href="styles.css">
 </html>
